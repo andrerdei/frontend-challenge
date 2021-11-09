@@ -17,5 +17,14 @@ export const MainDiv = styled.div`
   img {
     width: 550px;
     margin: 50px 0 30px 18px;
+    
+    @media(max-width: 710px) {
+      width: 450px;
+      margin: 100px 0 100px 12px;
+    }
+
+    @media(max-width: 510px) {
+      width: 350px;
+    }
   }
 `;

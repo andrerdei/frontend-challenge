@@ -12,12 +12,20 @@ import {CreateModalContent, MainTable} from "./styles";
 import * as usersListService from "../../services/usersList";
 import {GenericToast} from "../GenericToast";
 import {NewUser} from "../../interfaces/newUser";
+import { css } from "@emotion/react";
+import ClipLoader from "react-spinners/ClipLoader";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: blue;
+`;
 
 const tableStyles = makeStyles(
     (theme: Theme) => (
         {
             table: {
-                marginTop: 20
+                marginTop: 20,
             },
             cellHead: {
                 fontSize: 16,
@@ -25,7 +33,7 @@ const tableStyles = makeStyles(
             },
             cellBody: {
                 fontSize: 16,
-                fontWeight: 400
+                fontWeight: 400,
             },
             modal: {
                 display: 'flex',
@@ -43,7 +51,6 @@ const CssTextField = withStyles({
         marginTop: 10,
 
         '&': {
-            width: 450,
             marginTop: 20,
             marginLeft: 20,
             marginRight: 20,
@@ -74,6 +81,8 @@ type ListUserProps = {
 };
 
 export function UsersTable({users}: ListUserProps) {
+    let [loading, setLoading] = useState(true);
+    let [color, setColor] = useState("#ffffff");
     const [newUser, setNewUser] = useState<NewUser>({
         first_name: '',
         last_name: '',
@@ -142,6 +151,10 @@ export function UsersTable({users}: ListUserProps) {
 
     return (
         <>
+            {/*<div className="sweet-loading">*/}
+            {/*    <ClipLoader color={color} loading={loading} css={override} size={150} />*/}
+            {/*</div>*/}
+
             <CreateModal
                 opened={isCreateModalOpened}
                 title='Registrar Usuário'
@@ -276,10 +289,10 @@ export function UsersTable({users}: ListUserProps) {
                         (listUser) => (
                             <TableRow key={listUser.id}>
                                 <TableCell align="left" className={tableClasses.cellBody}>
-                                    {listUser.first_name} {listUser.last_name}
+                                    <span>{listUser.first_name} {listUser.last_name}</span>
                                 </TableCell>
                                 <TableCell align="left" className={tableClasses.cellBody}>
-                                    {listUser.email}
+                                    <span>{listUser.email}</span>
                                 </TableCell>
                                 <TableCell align="left" className={tableClasses.cellBody} style={{width: '250px'}}>
                                     <div className='actionButtonsDiv'>

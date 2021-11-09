@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
 import * as UserListStyles from './styles'
 import * as UsersListService from '../../services/usersList/index'
 import {User} from "../../interfaces/User";
@@ -7,7 +6,7 @@ import {withStyles, TextField} from '@material-ui/core'
 import {Search, PersonAdd, ArrowBack} from '@material-ui/icons'
 import {UsersTable} from "../../components/UsersTable";
 import {ActionButton} from "../../components/ActionButton";
-import {capitalizeName, nameToUppercase} from "../../utils/formatStrings";
+import {nameToUppercase} from "../../utils/formatStrings";
 import {GenericToast} from "../../components/GenericToast";
 
 const CssTextField = withStyles({
@@ -95,19 +94,6 @@ const UsersList = () => {
 
     return (
         <UserListStyles.MainDiv>
-            {/*<Link*/}
-            {/*    to="/"*/}
-            {/*    style={{ textDecoration: 'none', marginBottom: 10, marginTop: -35 }}*/}
-            {/*>*/}
-            {/*    <ActionButton*/}
-            {/*        type="secondary"*/}
-            {/*        text="Voltar"*/}
-            {/*        size={120}*/}
-            {/*        bordered*/}
-            {/*        icon={<ArrowBack style={{ color: '#424242', marginRight: 8 }} />}*/}
-            {/*    />*/}
-            {/*</Link>*/}
-
             <div className="boxContainer">
                 <span className="titleContainer">Busca</span>
 

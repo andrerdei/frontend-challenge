@@ -1,11 +1,13 @@
 import {createGlobalStyle} from 'styled-components';
+import backGroundDesktop from 'background_2.png';
+import backGroundMobile from 'background_1.jpg';
 
 export default createGlobalStyle`
   .pre-loader-div{
     width: 100vw;
     height: 100vh;
     background-color: white;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 11;
@@ -65,6 +67,11 @@ export default createGlobalStyle`
     --color-line: #EEEBEB;
 
     --white: #FFF;
+  }
+
+  html {
+    background-repeat: repeat;
+    background-size: contain;
   }
 
   body {

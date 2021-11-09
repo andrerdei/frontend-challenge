@@ -12,7 +12,6 @@ const Home = () => {
 
             <Link
                 to="/users"
-                style={{ textDecoration: 'none', marginBottom: 10, marginTop: -35 }}
             >
                 <ActionButton
                     type="primary"
