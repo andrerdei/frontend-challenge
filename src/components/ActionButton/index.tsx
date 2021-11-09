@@ -20,6 +20,7 @@ export function ActionButton({type, icon, text, size, height, color, background,
             className={`btn-${type}`}
             onClick={onClick}
             style={{width: size, height: height, border: bordered ? '1px solid #424242' : '', color: color, backgroundColor: background}}
+            disabled={disabled}
         >
             {icon} {text}
         </StyledButton>

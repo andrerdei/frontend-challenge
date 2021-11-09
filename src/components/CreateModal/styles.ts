@@ -9,7 +9,7 @@ export const MainDiv = styled.div`
   margin: auto;
 
   max-width: 500px;
-  height: 480px;
+  height: 500px;
   padding: 20px;
   border-radius: 4px;
   background: var(--white);

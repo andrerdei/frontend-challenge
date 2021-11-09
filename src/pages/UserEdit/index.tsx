@@ -48,7 +48,7 @@ const CssTextField = withStyles({
 
 const UserEdit = () => {
     const {userId} = useParams<ParamsProps>();
-
+    const [isLoading, setIsLoading] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [displayError, setDisplayError] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User>({
@@ -71,18 +71,24 @@ const UserEdit = () => {
 
     async function editUser() {
         if (!selectedUser.first_name || !selectedUser.last_name || !selectedUser.email || !selectedUser.email.includes('@')) {
+            setIsSaved(false);
             setDisplayError(true);
             return;
         }
 
         try {
-            await UserEditService.editUser(`/users/${userId}`, selectedUser).then((response: any) => {
-                setSelectedUser(selectedUser);
+            setIsLoading(true);
+
+            await UserEditService.editUser(`/users/${userId}`, selectedUser).then(() => {
                 setIsSaved(true);
+                setDisplayError(false);
+                setIsLoading(false);
             });
 
         } catch {
+            setIsSaved(false);
             setDisplayError(true);
+            setIsLoading(false);
         }
 
     }
@@ -151,6 +157,7 @@ const UserEdit = () => {
                             color={'#FFF'}
                             background={'#1a2898'}
                             bordered
+                            disabled={isLoading}
                             onClick={() => editUser()}
                         />
 
@@ -162,6 +169,7 @@ const UserEdit = () => {
                                 color={'#FFF'}
                                 background={'#128d55'}
                                 bordered
+                                disabled={isLoading}
                             />
                         </Link>
                     </div>

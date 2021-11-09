@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import * as UserListStyles from './styles'
 import * as UsersListService from '../../services/usersList/index'
 import {User} from "../../interfaces/User";
-import {withStyles, TextField} from '@material-ui/core'
-import {Search, PersonAdd, ArrowBack} from '@material-ui/icons'
+import {withStyles, TextField, TablePagination} from '@material-ui/core'
+import {Search} from '@material-ui/icons'
 import {UsersTable} from "../../components/UsersTable";
 import {ActionButton} from "../../components/ActionButton";
 import {nameToUppercase} from "../../utils/formatStrings";
@@ -42,6 +42,12 @@ const UsersList = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [alert, setAlert] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(0);
+    const [totalItems, setTotalItems] = useState(0);
+    const handlePageChange = (event: any, newPage: number) => {
+        setCurrentPage(newPage);
+    }
 
     function searchUser() {
         if (name === '' && email === '') {
@@ -55,8 +61,6 @@ const UsersList = () => {
                     || nameToUppercase(listUser.last_name).includes(nameToUppercase(name))
             );
 
-            console.log(foundNames);
-
             foundNames[0]
                 ? setListUsers(foundNames)
                 : setName('');
@@ -67,28 +71,29 @@ const UsersList = () => {
                 (listUser) => nameToUppercase(listUser.email).includes(nameToUppercase(email))
             );
 
-            console.log(foundEmails)
-
             foundEmails[0]
                 ? setListUsers(foundEmails)
                 : setEmail('');
         }
     }
 
-    async function getUsersList() {
-        await UsersListService.getUsersList('/users').then((response: any) => {
-            const {data} = response.data;
+    async function getUsersList(pageNumber: number) {
+        await UsersListService.getUsersList(`/users?page=${pageNumber + 1}`).then((response: any) => {
+            const {data, per_page, total} = response.data;
+            setItemsPerPage(per_page);
+            setTotalItems(total);
             setListUsers(data);
         });
     }
 
     useEffect(() => {
-        getUsersList();
-    }, []);
+        getUsersList(currentPage);
+    }, [currentPage]);
 
     useEffect(() => {
         if (name === '' && email === '') {
             setListUsers(listUsers);
+            getUsersList(currentPage);
         }
     }, [name, email]);
 
@@ -132,6 +137,14 @@ const UsersList = () => {
                 />
             </div>
             <UsersTable users={listUsers}/>
+            <TablePagination
+                className='tablePagination'
+                count={totalItems}
+                page={currentPage}
+                onPageChange={handlePageChange}
+                rowsPerPage={itemsPerPage}
+                rowsPerPageOptions={[itemsPerPage]}
+            />
         </UserListStyles.MainDiv>
     );
 }

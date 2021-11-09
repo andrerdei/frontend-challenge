@@ -18,6 +18,10 @@ export const StyledButton = styled.button`
 
   cursor: pointer;
   transition: filter 0.2s, background 0.2s;
+  
+  :disabled {
+    opacity: .5;
+  }
 
   :hover {
     filter: brightness(95%);

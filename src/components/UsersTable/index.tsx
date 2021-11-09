@@ -1,25 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {makeStyles, TextField, Theme, withStyles} from '@material-ui/core'
-import {Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core'
+import {makeStyles, TableFooter, TextField, Theme, withStyles} from '@material-ui/core'
+import {TableBody, TableCell, TableHead, TableRow} from '@material-ui/core'
 import {Edit, Delete, Clear, PersonAdd} from '@material-ui/icons'
 import {User} from "../../interfaces/User";
+import {NewUser} from "../../interfaces/newUser";
 import {DeleteModal} from "../DeleteModal";
 import {ActionButton} from "../ActionButton";
 import {nameToUppercase} from "../../utils/formatStrings";
 import {CreateModal} from "../CreateModal";
+import {GenericToast} from "../GenericToast";
 import {CreateModalContent, MainTable} from "./styles";
 import * as usersListService from "../../services/usersList";
-import {GenericToast} from "../GenericToast";
-import {NewUser} from "../../interfaces/newUser";
-import { css } from "@emotion/react";
-import ClipLoader from "react-spinners/ClipLoader";
-
-const override = css`
-  display: block;
-  margin: 0 auto;
-  border-color: blue;
-`;
 
 const tableStyles = makeStyles(
     (theme: Theme) => (
@@ -81,13 +73,15 @@ type ListUserProps = {
 };
 
 export function UsersTable({users}: ListUserProps) {
-    let [loading, setLoading] = useState(true);
-    let [color, setColor] = useState("#ffffff");
+    const [isLoading, setIsLoading] = useState(false);
     const [newUser, setNewUser] = useState<NewUser>({
         first_name: '',
         last_name: '',
         email: '',
     });
+    const [isFirstNameTouched, setIsFirstNameTouched] = useState(false);
+    const [isLastNameTouched, setIsLastNameTouched] = useState(false);
+    const [isEmailTouched, setIsEmailTouched] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [displayError, setDisplayError] = useState(false);
     const [newUsers, setNewUsers] = useState<User[]>([]);
@@ -107,6 +101,12 @@ export function UsersTable({users}: ListUserProps) {
             last_name: '',
             email: '',
         });
+        setIsFirstNameTouched(false);
+        setIsLastNameTouched(false);
+        setIsEmailTouched(false);
+
+        setIsSaved(false);
+        setDisplayError(false);
     }
 
     function openDeleteModal(id: number) {
@@ -120,28 +120,40 @@ export function UsersTable({users}: ListUserProps) {
 
     function createUser() {
         if (!newUser.first_name || !newUser.last_name || !newUser.email || !newUser.email.includes('@')) {
+            setIsFirstNameTouched(true);
+            setIsLastNameTouched(true);
+            setIsEmailTouched(true);
+
+            setIsSaved(false);
             setDisplayError(true);
             return;
         }
 
         try {
+            setIsLoading(true);
+
             return usersListService.createUser(`/users`, newUser).then(() => {
-                // const currentUsers = newUsers.filter((listUser) => listUser.id !== id)
-                // setNewUsers(currentUsers);
                 setIsSaved(true);
+                setDisplayError(false);
+                setIsLoading(false);
             });
 
         } catch {
+            setIsSaved(false);
             setDisplayError(true);
+            setIsLoading(false);
         }
     }
 
     function deleteSelectedUser(id: number) {
+        setIsLoading(true);
         const endpoint = `/users/${id}`
         return usersListService.deleteUser(endpoint).then(() => {
             const currentUsers = newUsers.filter((listUser) => listUser.id !== id)
             setNewUsers(currentUsers);
             setIsDeleteModalOpened(false);
+
+            setIsLoading(false);
         });
     }
 
@@ -151,10 +163,6 @@ export function UsersTable({users}: ListUserProps) {
 
     return (
         <>
-            {/*<div className="sweet-loading">*/}
-            {/*    <ClipLoader color={color} loading={loading} css={override} size={150} />*/}
-            {/*</div>*/}
-
             <CreateModal
                 opened={isCreateModalOpened}
                 title='Registrar Usuário'
@@ -167,8 +175,13 @@ export function UsersTable({users}: ListUserProps) {
                             placeholder="Informe o seu primeiro nome"
                             variant="outlined"
                             value={newUser?.first_name}
-                            onChange={e => setNewUser({...newUser, first_name: e.target.value})}
-                            error={newUser?.first_name === ""}
+                            onChange={
+                                e => {
+                                    setNewUser({...newUser, first_name: e.target.value});
+                                    setIsFirstNameTouched(true);
+                                }
+                            }
+                            error={newUser?.first_name === "" && isFirstNameTouched}
                             helperText={newUser?.first_name === "" ? 'Campo obrigatório' : ' '}
                         />
                         <CssTextField
@@ -176,8 +189,13 @@ export function UsersTable({users}: ListUserProps) {
                             placeholder="Informe o seu ultimo nome"
                             variant="outlined"
                             value={newUser?.last_name}
-                            onChange={e => setNewUser({...newUser, last_name: e.target.value})}
-                            error={newUser?.last_name === ""}
+                            onChange={
+                                e => {
+                                    setNewUser({...newUser, last_name: e.target.value});
+                                    setIsLastNameTouched(true);
+                                }
+                            }
+                            error={newUser?.last_name === "" && isLastNameTouched}
                             helperText={newUser?.last_name === "" ? 'Campo obrigatório' : ' '}
                         />
                         <CssTextField
@@ -185,8 +203,13 @@ export function UsersTable({users}: ListUserProps) {
                             placeholder="Informe o seu novo email"
                             variant="outlined"
                             value={newUser?.email}
-                            onChange={e => setNewUser({...newUser, email: e.target.value})}
-                            error={newUser?.email === "" || !newUser?.email.includes('@')}
+                            onChange={
+                                e => {
+                                    setNewUser({...newUser, email: e.target.value});
+                                    setIsEmailTouched(true);
+                                }
+                            }
+                            error={(newUser?.email === "" && isEmailTouched) || (!newUser?.email.includes('@') && isEmailTouched)}
                             helperText={newUser?.email === "" && 'Campo obrigatório' || !newUser?.email.includes('@') && 'Email inválido'}
                         />
                     </div>
@@ -213,6 +236,7 @@ export function UsersTable({users}: ListUserProps) {
                             size={120}
                             color={'#FFF'}
                             background={'#1a2898'}
+                            disabled={isLoading}
                             onClick={() => createUser()}
                         />
 
@@ -223,6 +247,7 @@ export function UsersTable({users}: ListUserProps) {
                             size={120}
                             color={'#FFF'}
                             background={'#128d55'}
+                            disabled={isLoading}
                             onClick={() => closeCreateModal()}
                         />
                     </div>
@@ -242,6 +267,7 @@ export function UsersTable({users}: ListUserProps) {
                     size={120}
                     color={'#FFF'}
                     background={'#FF0000'}
+                    disabled={isLoading}
                     onClick={() => deleteSelectedUser(userId)}
                 />
 
@@ -252,6 +278,7 @@ export function UsersTable({users}: ListUserProps) {
                     size={120}
                     color={'#FFF'}
                     background={'#128d55'}
+                    disabled={isLoading}
                     onClick={() => closeDeleteModal()}
                 />
             </DeleteModal>
@@ -262,6 +289,7 @@ export function UsersTable({users}: ListUserProps) {
                 text="Adicionar usuário"
                 size={230}
                 color={'#424242F'}
+                background={'#FFF'}
                 icon={<PersonAdd style={{color: '#424242', marginRight: 8}}/>}
                 onClick={() => openCreateModal()}
             />
