@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {withStyles, TextField} from '@material-ui/core';
 import SaveAlt from '@material-ui/icons/SaveAlt';
@@ -7,6 +7,7 @@ import {ActionButton} from "../../components/ActionButton";
 import {GenericToast} from "../../components/GenericToast";
 import * as UserEditService from "../../services/userEdit";
 import {User} from "../../interfaces/User";
+import {MainDiv} from "./styles";
 
 type ParamsProps = {
     userId: string;
@@ -14,11 +15,14 @@ type ParamsProps = {
 
 const CssTextField = withStyles({
     root: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 10,
+
         '&': {
-            width: 300,
-        },
-        '& + &': {
-            marginLeft: 10,
+            marginTop: 20,
+            marginLeft: 20,
+            marginRight: 20,
         },
         '& label.Mui-focused': {
             color: '#000',
@@ -66,14 +70,21 @@ const UserEdit = () => {
     }
 
     async function editUser() {
+        if (!selectedUser.first_name || !selectedUser.last_name || !selectedUser.email || !selectedUser.email.includes('@')) {
+            setDisplayError(true);
+            return;
+        }
+
         try {
             await UserEditService.editUser(`/users/${userId}`, selectedUser).then((response: any) => {
                 setSelectedUser(selectedUser);
                 setIsSaved(true);
             });
+
         } catch {
             setDisplayError(true);
         }
+
     }
 
     useEffect(() => {
@@ -82,48 +93,21 @@ const UserEdit = () => {
 
     return (
         <>
-            <div className="formContainer">
-                <Link to="/users" style={{textDecoration: 'none', marginBottom: 20}}>
-                    <ActionButton
-                        type="secondary"
-                        text="Voltar"
-                        size={120}
-                        bordered
-                        icon={<ArrowBack style={{color: '#424242', marginRight: 8}}/>}
-                    />
-                </Link>
-
+            <MainDiv>
                 <div className="boxContainer">
-                    <span className="titleContainer">
+                    <span className='titleSpan'>
                         Atualize seus dados
                     </span>
 
-                    <div className="profileContainer">
-                        <div className="detailProfile">
-                            <span className="nameProfile">
-                                {selectedUser?.first_name} {selectedUser?.last_name}
-                            </span>
-
-                            <span className="emailProfile">
-                                {selectedUser?.email}
-                            </span>
-                        </div>
-                    </div>
-
                     <div className="inputGroupUpdate">
-                        <CssTextField
-                            disabled
-                            label="ID"
-                            variant="outlined"
-                            value={selectedUser?.id}
-                            style={{width: 280}}
-                        />
                         <CssTextField
                             label="Primeiro nome"
                             placeholder="Informe o seu primeiro nome"
                             variant="outlined"
                             value={selectedUser?.first_name}
                             onChange={e => setSelectedUser({...selectedUser, first_name: e.target.value})}
+                            error={selectedUser?.first_name === ""}
+                            helperText={selectedUser?.first_name === "" ? 'Campo obrigatório' : ' '}
                         />
                         <CssTextField
                             label="Último nome"
@@ -131,14 +115,17 @@ const UserEdit = () => {
                             variant="outlined"
                             value={selectedUser?.last_name}
                             onChange={e => setSelectedUser({...selectedUser, last_name: e.target.value})}
+                            error={selectedUser?.last_name === ""}
+                            helperText={selectedUser?.last_name === "" ? 'Campo obrigatório' : ' '}
                         />
                         <CssTextField
-                            required
                             label="E-mail"
                             placeholder="Informe o seu novo email"
                             variant="outlined"
                             value={selectedUser?.email}
                             onChange={e => setSelectedUser({...selectedUser, email: e.target.value})}
+                            error={selectedUser?.email === "" || !selectedUser?.email.includes('@')}
+                            helperText={selectedUser?.email === "" && 'Campo obrigatório' || !selectedUser?.email.includes('@') && 'Email inválido'}
                         />
                     </div>
 
@@ -156,15 +143,30 @@ const UserEdit = () => {
                         close={() => setDisplayError(false)}
                     />
 
-                    <ActionButton
-                        type="primary"
-                        text="Salvar"
-                        size={120}
-                        icon={<SaveAlt style={{color: '#FFF', marginRight: 8}}/>}
-                        onClick={() => editUser()}
-                    />
+                    <div className='actionButtonsDiv'>
+                        <ActionButton
+                            type="primary"
+                            text="Salvar"
+                            size={140}
+                            color={'#FFF'}
+                            background={'#1a2898'}
+                            bordered
+                            onClick={() => editUser()}
+                        />
+
+                        <Link to="/users">
+                            <ActionButton
+                                type="secondary"
+                                text="Voltar"
+                                size={140}
+                                color={'#FFF'}
+                                background={'#128d55'}
+                                bordered
+                            />
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            </MainDiv>
         </>
     )
 }

@@ -21,8 +21,8 @@ export function CreateModal({opened, title, subTitle, children, onClose}: ModalC
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
         >
-            <Fade>
-                <MainDiv  className="modalConfirm" style={{visibility: 'visible'}}>
+            <Fade in={opened}>
+                <MainDiv>
                     <h2  id="transition-modal-title">{title}</h2>
                     {
                         subTitle && (<span  id="transition-modal-description">{subTitle}</span>)

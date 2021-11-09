@@ -1,22 +1,27 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
-import {ArrowBack} from '@material-ui/icons'
 import * as HomeStyles from './styles'
 import {ActionButton} from "../../components/ActionButton";
 
 const Home = () => {
     return(
         <HomeStyles.MainDiv>
+            <h2>Frontend Challenge Gofind</h2>
+
+            <img src="/home_page_image.png" alt="Home Image" />
+
             <Link
                 to="/users"
                 style={{ textDecoration: 'none', marginBottom: 10, marginTop: -35 }}
             >
                 <ActionButton
                     type="primary"
-                    text="Lista de usuários"
-                    size={120}
+                    text="Acesse a Lista de usuários"
+                    size={300}
+                    height={50}
+                    color={'#FFF'}
                     bordered
-                    icon={<ArrowBack style={{ color: '#424242', marginRight: 8 }} />}
+                    background={'#464952'}
                 />
             </Link>
         </HomeStyles.MainDiv>

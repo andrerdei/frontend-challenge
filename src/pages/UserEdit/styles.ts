@@ -1,34 +1,36 @@
 import styled from 'styled-components'
 
 export const MainDiv = styled.div`
-  .formContainer {
-    width: 100%;
-    max-width: 1300px;
-    margin: auto;
-    padding: 24px;
-
+    min-height: 100vh;
+  
     display: flex;
-    flex-direction: column;
     justify-content: center;
-  }
+    align-items: flex-start;
 
+  .titleSpan {
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: var(--color-general);  
+    align-self: flex-start;
+  }
+  
   .boxContainer {
-    width: 100%;
+    max-width: 800px;
     background: var(--white);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, .08);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, .08);
     padding: 20px;
+    margin-top: 150px;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
+    align-items: center;
 
-  .titleContainer {
-    font-weight: 500;
-    margin-bottom: 20px;
-    color: var(--color-general);
+    @media(max-width: 700px) {
+      width: 90%;
+    }
   }
-
+  
   .profileContainer {
     display: flex;
   }
@@ -56,9 +58,25 @@ export const MainDiv = styled.div`
   }
 
   .inputGroupUpdate {
+    width: 600px;
     margin-top: 20px;
     padding-bottom: 20px;
     margin-bottom: 10px;
     border-bottom: 2px solid #EEE;
+    
+    @media(max-width: 700px) {
+      width: 100%;
+    }
+  }
+  
+  .actionButtonsDiv {
+    width: 350px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+
+    @media(max-width: 400px) {
+      width: 300px;
+    }
   }
 `;

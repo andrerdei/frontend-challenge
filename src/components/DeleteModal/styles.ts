@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const MainDiv = styled.div`
-  .modalConfirm {
     position: absolute;
     top: 0;
     left: 0;
@@ -9,15 +8,26 @@ export const MainDiv = styled.div`
     bottom: 0;
     margin: auto;
 
-    width: 500px;
-    height: 150px;
+    max-width: 500px;
+    height: 200px;
     padding: 20px;
     border-radius: 4px;
     background: var(--white);
-  }
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 
-  .modalConfirm > h2 {
+  > h2 {
     color: var(--color-general);
+    font-size: 20px;
+    align-self: flex-start;
+    justify-self: flex-start;
+  }
+  
+  > span {
+    margin-top: 25px;
   }
 
   .modalConfirm > p {

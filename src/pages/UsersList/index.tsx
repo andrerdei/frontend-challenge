@@ -7,16 +7,15 @@ import {withStyles, TextField} from '@material-ui/core'
 import {Search, PersonAdd, ArrowBack} from '@material-ui/icons'
 import {UsersTable} from "../../components/UsersTable";
 import {ActionButton} from "../../components/ActionButton";
-import {capitalizeName} from "../../utils/captilizedName";
+import {capitalizeName, nameToUppercase} from "../../utils/formatStrings";
 import {GenericToast} from "../../components/GenericToast";
 
 const CssTextField = withStyles({
     root: {
         '&': {
-            width: 300,
-        },
-        '& + &': {
-            marginLeft: 10,
+            marginRight: 10,
+            marginTop: 10,
+            marginBottom: 10,
         },
         '& label.Mui-focused': {
             color: '#000',
@@ -52,21 +51,28 @@ const UsersList = () => {
         }
 
         if (name) {
-            const capitalizedName = capitalizeName(name);
-
             const foundNames = listUsers.filter(
-                (listUser) => listUser.first_name === capitalizedName || listUser.last_name === capitalizedName
+                (listUser) => nameToUppercase(listUser.first_name).includes(nameToUppercase(name))
+                    || nameToUppercase(listUser.last_name).includes(nameToUppercase(name))
             );
 
-            setListUsers(foundNames);
+            console.log(foundNames);
+
+            foundNames[0]
+                ? setListUsers(foundNames)
+                : setName('');
         }
 
         if (email) {
             const foundEmails = listUsers.filter(
-                (listUser) => listUser.email === email
+                (listUser) => nameToUppercase(listUser.email).includes(nameToUppercase(email))
             );
 
-            setListUsers(foundEmails);
+            console.log(foundEmails)
+
+            foundEmails[0]
+                ? setListUsers(foundEmails)
+                : setEmail('');
         }
     }
 
@@ -83,24 +89,24 @@ const UsersList = () => {
 
     useEffect(() => {
         if (name === '' && email === '') {
-            getUsersList();
+            setListUsers(listUsers);
         }
     }, [name, email]);
 
     return (
         <UserListStyles.MainDiv>
-            <Link
-                to="/"
-                style={{ textDecoration: 'none', marginBottom: 10, marginTop: -35 }}
-            >
-                <ActionButton
-                    type="secondary"
-                    text="Voltar"
-                    size={120}
-                    bordered
-                    icon={<ArrowBack style={{ color: '#424242', marginRight: 8 }} />}
-                />
-            </Link>
+            {/*<Link*/}
+            {/*    to="/"*/}
+            {/*    style={{ textDecoration: 'none', marginBottom: 10, marginTop: -35 }}*/}
+            {/*>*/}
+            {/*    <ActionButton*/}
+            {/*        type="secondary"*/}
+            {/*        text="Voltar"*/}
+            {/*        size={120}*/}
+            {/*        bordered*/}
+            {/*        icon={<ArrowBack style={{ color: '#424242', marginRight: 8 }} />}*/}
+            {/*    />*/}
+            {/*</Link>*/}
 
             <div className="boxContainer">
                 <span className="titleContainer">Busca</span>
@@ -115,7 +121,7 @@ const UsersList = () => {
                     />
                     <CssTextField
                         label="E-mail"
-                        placeholder="Buscar por email"
+                        placeholder="Buscar por email..."
                         variant="outlined"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
@@ -133,20 +139,13 @@ const UsersList = () => {
                     type="primary"
                     text="Buscar"
                     size={120}
-                    icon={<Search style={{ color: '#FFF', marginRight: 8 }} />}
+                    color={'#FFF'}
+                    background={'#05C46B'}
+                    icon={<Search style={{color: '#FFF', marginRight: 8}}/>}
                     onClick={() => searchUser()}
                 />
             </div>
-
-            <ActionButton
-                bordered
-                type="secondary"
-                text="Adicionar usuário"
-                size={230}
-                icon={<PersonAdd style={{ color: '#424242', marginRight: 8 }} />}
-                // onClick={UsersTable.openCreateModal()}
-            />
-            <UsersTable users={listUsers} />
+            <UsersTable users={listUsers}/>
         </UserListStyles.MainDiv>
     );
 }
