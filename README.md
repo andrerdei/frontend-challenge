@@ -1,35 +1,23 @@
-# frontend-challenge
+#'[Link para o projeto no Netlify](https://gofind-frontend-challenge.netlify.app/).
 
-- React
-- Material-ui
-- https://reqres.in -> API FAKE
-- Fazer um fork deste repositório.
+## Sobre
 
-## Criar um SPA com 3 rotas:
+Projeto desenvolvido para teste de frontend da Gofind
 
-### Home Page - /
+## Primeiros passos
 
-Colocar algum conteúdo fake e um button com link para a lista de usuários.
+### `Clone o repositorio`
 
-### Users Page - /users
+git clone https://github.com/salazenas/frontend-challenge.git
 
-- Buscar lista de usuários em GET `/api/users`.
-- Lista de usuários, pode ser uma table.
-- Cada user deve ter um button com link para a edição dele.
-- Button voltar para home
+### `Instale as dependencias`
 
-### User Edit Page - /users/:userId
+npm install
+ou
+yarn
 
-- Buscar dados do usuário em GET `/api/users/:userId`.
-- Form para alterar email, first_name e last_name.
-- Fazer request para atualizar usuário em PUT `/api/users/:userId`,
-  adicionar um mensagem informando o sucesso|erro.
-- Button voltar para users.
+### `Inicialize a aplicação`
 
----
-
-Aqui na Gofind a gente trabalha com UX portanto no arquivo [SPECS.md](SPECS.md) você vai encontrar as especificações de UX para o desafio. Nas especificações você vai encontrar a tela de lista de usuários sugerida, e a partir dela, em conjunto com as especificações você deve criar as telas adicionais.
-
----
-
-Lembrando que não precisa estar perfeito, é uma sugestão mostrando um pouco de como nós trabalhamos, mas é um bônus bem grande seguir as especificações.
+npm start
+ou
+yarn start
